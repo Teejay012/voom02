@@ -1,5 +1,5 @@
-import { FiEye } from "react-icons/fi";
-import { FiEyeOff } from "react-icons/fi";
+import { LiaEye } from "react-icons/lia";
+import { LiaEyeSlash } from "react-icons/lia";
 import google from "../../public/assets/google.png"
 import apple from "../../public/assets/apple.png"
 
@@ -22,13 +22,13 @@ const Register = () => {
           <div className='my-5 relative'>
             <label htmlFor="" className='text-[16px] font-[600] mb-5'>Password</label>
             <input type="text" required placeholder='Create password ' className='h-[52px] px-5 rounded-[8px] w-full bg-[#C4C4C436] text-[#5D5D5D70] outline-none'/>
-            <FiEye className="absolute bottom-[15px] right-[15px] text-[#5D5D5D70] text-[17px]"/>
+            <LiaEye className="absolute bottom-[15px] right-[15px] text-[#5D5D5D70] text-[17px]"/>
           </div>
 
           <div className='my-5 relative'>
             <label htmlFor="" className='text-[16px] font-[600] mb-5'>Confirm password</label>
             <input type="text" required placeholder='Re-enter password' className='h-[52px] px-5 rounded-[8px] w-full bg-[#C4C4C436] text-[#5D5D5D70] outline-none'/>
-            <FiEye className="absolute bottom-[15px] right-[15px] text-[#5D5D5D70] text-[17px]"/>
+            <LiaEye className="absolute bottom-[15px] right-[15px] text-[#5D5D5D70] text-[17px]"/>
           </div>
 
           <p className="text-[12px] font-[600]">By creating an account you accept our <a href="#" className="text-secondary-color">Terms of Service</a> and <a href="#" className="text-secondary-color">Privacy Policy</a></p>
