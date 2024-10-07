@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { RiHomeSmile2Fill } from "react-icons/ri";
+import { BiSolidHomeSmile } from "react-icons/bi";
 import { BiSolidCategoryAlt } from "react-icons/bi";
 import { MdHomeRepairService } from "react-icons/md";
 import { MdMoreVert } from "react-icons/md";
@@ -19,7 +19,7 @@ const Nav = () => {
         <ul className="flex justify-between items-center w-full h-full">
             <li>
                 <Link to="./" className="flex flex-col items-center justify-center gap-2 text-secondary-color">
-                    <RiHomeSmile2Fill className="text-[25px] font-bold"/>
+                    <BiSolidHomeSmile className="text-[25px] font-bold"/>
                     <p className="text-[12px] text-[#8891A5] font[500]">Home</p>
                 </Link>
             </li>

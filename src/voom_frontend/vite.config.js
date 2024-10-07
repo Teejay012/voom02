@@ -9,13 +9,6 @@ dotenv.config({ path: '../../.env' });
 export default defineConfig({
   build: {
     emptyOutDir: true,
-    rollupOptions: {
-      onwarn(warning, warn) {
-        // Suppress specific warnings or treat all as warnings
-        if (warning.code === 'THIS_IS_UNDEFINED') return;
-        warn(warning); // Proceed with warning
-      }
-    }
   },
   optimizeDeps: {
     esbuildOptions: {
