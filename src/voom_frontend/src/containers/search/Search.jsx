@@ -1,5 +1,5 @@
 import { RiSearch2Line } from "react-icons/ri";
-import { BsMic } from "react-icons/bs";
+import { PiScanFill } from "react-icons/pi";
 
 const Search = () => {
   return (
@@ -10,7 +10,7 @@ const Search = () => {
         </div>
 
         <div className="w-[44px] h-[44px] flex justify-center items-center rounded-[10px] bg-secondary-color cursor-pointer">
-            <BsMic className="text-[#fff] text-[17px] font-bold"/>
+            <PiScanFill className="text-[#fff] text-[17px] font-bold"/>
         </div>
     </div>
   )
