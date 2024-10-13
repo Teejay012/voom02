@@ -4,7 +4,7 @@ module {
     price : Float;
     vendor : Vendor;
     category: Text;
-    image : Text;
+    image_url : Text;
     time_of_upload : Int;
     description : Text;
     no_of_sales : Nat;
@@ -26,11 +26,21 @@ module {
     cart : [Item];
   };
   public type Vendor = {
-    full_name : Text;
-    username : Text;
+    brand : Text;
     email : Text;
     phone_no : Text;
     card_details : Text;
     itinerary : [Item];
   };
-}
+  public type ItemDetails = {
+    name : Text;
+    price : Float;
+    vendor : Text;
+    category : Text;
+    image_url : Text;
+    time_of_upload : Int;
+    description : Text;
+    no_of_sales : Nat;
+    rating : Float;
+  }
+
