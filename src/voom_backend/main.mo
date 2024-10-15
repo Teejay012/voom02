@@ -2,7 +2,7 @@ import Types "./types";
 import Time "mo:base/Time";
 import Buffer "mo:base/Buffer";
 import Float "mo:base/Float";
-import Array "mo:base/Array";
+
 
 actor {
   //stores all items on app
@@ -32,7 +32,7 @@ actor {
           time_of_upload = Time.now();
           description = desc;
           no_of_sales = 0;
-          ratings = [];
+          var ratings = [];
         };
         let voomItemsBuff = Buffer.fromArray<Types.CatgRecord>(voomItems);
         for (c in voomItemsBuff.vals()) {
@@ -133,7 +133,7 @@ actor {
   //authenticates vendor
   //returns "Success" if vendor authenticated
   //returns "Fail" if vendor not authenticated
-  //returns "Username does not exist" if vendor account with username provided does not exist
+  //returns "Vendor <brand name> does not exist" if vendor account with brand name provided does not exist
   public query func authenticateVendor(brand_name : Text, password : Text) : async Text {
     for (vendor in voomVendors.vals()) {
       if (vendor.brand == brand_name) {
@@ -145,6 +145,23 @@ actor {
       };
     };
     return "Vendor " # brand_name # " does not exist";
+  };
+
+  //authenticates user
+  //returns "Success" if user authenticated
+  //returns "Fail" if user not authenticated
+  //returns "User <username> does not exist" if user account with username provided does not exist
+  public query func authenticateUser(user_name : Text, password : Text) : async Text {
+    for (user in voomUsers.vals()) {
+      if (user.username == user_name) {
+        if (password == user.password) {
+          return "Success";
+        } else {
+          return "Fail";
+        };
+      };
+    };
+    return "User " # user_name # " does not exist";
   };
 
   //Gets items under a certain category
@@ -159,6 +176,31 @@ actor {
     };
     return ("Fail", "Category does not exist", []);
   };
+
+  public func rate(rating : Nat, item_name : Text, category : Text) : async (Text, Text) {
+    if (rating < 1 or rating > 5) {
+      return ("Fail", "Invalid input");
+    };
+    for (c in voomItems.vals()) {
+      for (item in c.catgItems.vals()) {
+        if (item.name == item_name) {
+          let newRating : Types.Rating = switch (rating) {
+            case (1) { #one };
+            case (2) { #two };
+            case (3) { #three };
+            case (4) { #four };
+            case (5) { #five };
+            case (_) { #one };
+          };
+          let itemRBuff = Buffer.fromArray<Types.Rating>(item.ratings);
+          itemRBuff.add(newRating);
+          item.ratings := Buffer.toArray(itemRBuff);
+          return ("Success", "Nil");
+        };
+      };
+    };
+    return ("Fail", "Category " # category # " does not exist");
+  }
 };
 
 

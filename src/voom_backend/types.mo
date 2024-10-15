@@ -9,7 +9,7 @@ module {
     time_of_upload : Int;
     description : Text;
     no_of_sales : Nat;
-    ratings : [Rating];
+    var ratings : [Rating];
   };
 
   //Type Rating
