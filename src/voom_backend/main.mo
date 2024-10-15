@@ -2,10 +2,11 @@ import Types "./types";
 import Time "mo:base/Time";
 import Buffer "mo:base/Buffer";
 import Float "mo:base/Float";
+import Array "mo:base/Array";
 
 actor {
   //stores all items on app
-  stable var voomItems : [Types.Item] = [];
+  stable var voomItems : [Types.CatgRecord] = [];
   //stores details of vendors registered on app
   stable var voomVendors : [Types.Vendor] = [];
   //stores details of users registered on app
@@ -13,7 +14,13 @@ actor {
 
   //Upload an item on the e-commerce website
   //Returns "Success" if successfully
-  public func uploadItem(name : Text, price : Float, vendor_brand : Text, category: Text, image_url : Text, desc : Text) : async (Text, Text) {
+  public func uploadItem(name : Text, price : Float, vendor_brand : Text, password : Text, category: Text, image_url : Text, desc : Text) : async (Text, Text) {
+    let isAuth = await authenticateVendor(vendor_brand, password);
+    if (isAuth == "Fail") {
+      return ("Fail", "Wrong password");
+    } else if (isAuth != "Success") {
+      return ("Fail", isAuth);
+    };
     for (this_vendor in voomVendors.vals()) {
       if (this_vendor.brand == vendor_brand) {
         let newItem : Types.Item = {
@@ -27,10 +34,23 @@ actor {
           no_of_sales = 0;
           ratings = [];
         };
-        let voomItemsBuff = Buffer.fromArray<Types.Item>(voomItems);
-        voomItemsBuff.add(newItem);
-        voomItems := Buffer.toArray<Types.Item>(voomItemsBuff);
-        return ("Success", "Nil")
+        let voomItemsBuff = Buffer.fromArray<Types.CatgRecord>(voomItems);
+        for (c in voomItemsBuff.vals()) {
+          if (c.catg == category) {
+            //Add item into voomItems under category provided
+            let catg_itemsBuff = Buffer.fromArray<Types.Item>(c.catgItems);
+            catg_itemsBuff.add(newItem);
+            c.catgItems := Buffer.toArray<Types.Item>(catg_itemsBuff);
+             return ("Success", "Nil")
+          };
+        };
+        let newCatg = {
+          catg = category;
+          var catgItems = [newItem];
+        };
+        voomItemsBuff.add(newCatg);
+        voomItems := Buffer.toArray(voomItemsBuff);
+        return ("Success", "New category created");
       };
     };
     return ("Fail", "Vendor not found");
@@ -70,16 +90,27 @@ actor {
   };
 
   //Get all items available on website
-  public func getAllItems() : async [Types.ItemDetails] {
-    let allItems = Buffer.Buffer<Types.ItemDetails>(0);
-    for (item in voomItems.vals()) {
-      let details = await getItemDetails(item);
-      allItems.add(details);
+  /*Sample return value: [
+    ("Phones", ["I-phone 11", "I-phone 12", "I-Phone 13"]),
+    ("Bags", ["Gucci", "Versace"])
+  ]
+  */
+  public func getAllItems() : async [(Text, [Types.ItemDetails])] {
+    let allItems = Buffer.Buffer<(Text, [Types.ItemDetails])>(0);
+    for (c in voomItems.vals()) {
+      let catg_items = Buffer.Buffer<Types.ItemDetails>(0);
+      for (item in c.catgItems.vals()) {
+        let details = await getItemDetails(item);
+        catg_items.add(details);
+      };
+      allItems.add((c.catg, Buffer.toArray<Types.ItemDetails>(catg_items)));
     };
-    return Buffer.toArray<Types.ItemDetails>(allItems);
+    return Buffer.toArray<(Text, [Types.ItemDetails])>(allItems);
   };
 
-  public func addVendor(brand : Text, email : Text, phone_no : Text, card_details : Text) : async (Text, Text) {
+  //Should be used for Vendor sign in
+  //Adds vendor to website
+  public func addVendor(brand : Text, email : Text, phone_no : Text, card_details : Text, password : Text) : async (Text, Text) {
     for (vendor in voomVendors.vals()) {
       if (vendor.brand == brand) {
         return ("Fail", "Brand name already exists.");
@@ -90,11 +121,44 @@ actor {
       email = email;
       phone_no = phone_no;
       card_details = card_details;
+      password = password;
       itinerary = [];
     };
     let voomVendorsBuff = Buffer.fromArray<Types.Vendor>(voomVendors);
     voomVendorsBuff.add(newVendor);
     voomVendors := Buffer.toArray<Types.Vendor>(voomVendorsBuff);
     return ("Success", "Nil")
-  }
+  };
+
+  //authenticates vendor
+  //returns "Success" if vendor authenticated
+  //returns "Fail" if vendor not authenticated
+  //returns "Username does not exist" if vendor account with username provided does not exist
+  public query func authenticateVendor(brand_name : Text, password : Text) : async Text {
+    for (vendor in voomVendors.vals()) {
+      if (vendor.brand == brand_name) {
+        if (password == vendor.password) {
+          return "Success";
+        } else {
+          return "Fail";
+        };
+      };
+    };
+    return "Vendor " # brand_name # " does not exist";
+  };
+
+  //Gets items under a certain category
+  //Returns ("Fail", "<error>", []) if category does not exist
+  //Returns ("Success", "Nil", [<item details>]) if successfull
+  public func getCategoryItems (category : Text) : async (Text, Text, [Types.ItemDetails]) {
+    let all_items = await getAllItems();
+    for (c in all_items.vals()) {
+      if (c.0 == category) {
+        return ("Success", "Nil", c.1);
+      };
+    };
+    return ("Fail", "Category does not exist", []);
+  };
 };
+
+
