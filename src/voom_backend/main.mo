@@ -130,6 +130,29 @@ actor {
     return ("Success", "Nil")
   };
 
+  //Should be used for User sign in
+  //Adds user to website
+  public func userSignUp(full_name : Text, username : Text, email : Text, phone_no : Text, card_details : Text, password : Text) : async (Text, Text) {
+    for (user in voomUsers.vals()) {
+      if (user.username == username) {
+        return ("Fail", "Username already exists.");
+      };
+    };
+    let newUser : Types.User = {
+      full_name = full_name;
+      username = username;
+      email = email;
+      phone_no = phone_no;
+      card_details = card_details;
+      password = password;
+      var cart = [];
+    };
+    let voomUsersBuff = Buffer.fromArray<Types.User>(voomUsers);
+    voomUsersBuff.add(newUser);
+    voomUsers := Buffer.toArray<Types.User>(voomUsersBuff);
+    return ("Success", "Nil")
+  };
+
   //authenticates vendor
   //returns "Success" if vendor authenticated
   //returns "Fail" if vendor not authenticated
@@ -202,5 +225,3 @@ actor {
     return ("Fail", "Category " # category # " does not exist");
   }
 };
-
-

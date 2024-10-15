@@ -29,7 +29,7 @@ module {
     phone_no : Text;
     card_details : Text;
     password : Text;
-    cart : [Item];
+    var cart : [Item];
   };
 
   //Type Vendor
