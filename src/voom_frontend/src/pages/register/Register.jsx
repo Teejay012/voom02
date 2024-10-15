@@ -1,9 +1,28 @@
+import React, { useState } from 'react';
+import { addVendor } from '../../motokoApi';
 import { LiaEye } from "react-icons/lia";
 import { LiaEyeSlash } from "react-icons/lia";
 import google from "../../public/assets/google.png"
 import apple from "../../public/assets/apple.png"
 
 const Register = () => {
+
+  const [vendorData, setVendorData] = useState({
+    brand: '',
+    email: '',
+    phoneNo: '',
+    cardDetails: '',
+  });
+
+  const [feedback, setFeedback] = useState({ success: null, message: '' });
+
+  const handleInputChange = (e) => {
+    setVendorData({
+      ...vendorData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
     <div className="relative z-50 bg-[#fff] h-full w-full py-3 mb-[100px]">
         <h2 className='text-[28px] font-[600] my-5'>Create account</h2>
