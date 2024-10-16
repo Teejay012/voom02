@@ -10,6 +10,7 @@ module {
     description : Text;
     no_of_sales : Nat;
     var ratings : [Rating];
+    var reviews : [(Text, Text)] //(username, review message)
   };
 
   //Type Rating
@@ -30,6 +31,8 @@ module {
     card_details : Text;
     password : Text;
     var cart : [Item];
+    var favorites : [ItemDetails];
+    var wishlist : [ItemDetails];
   };
 
   //Type Vendor
