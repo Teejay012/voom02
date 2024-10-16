@@ -215,6 +215,9 @@ actor {
     return ("Fail", "Category does not exist", []);
   };
 
+  //Rates an item (1-5 stars)
+  //Returns ("Fail", "<error>") if not successful
+  //Returns ("Success", "Nil") if successful
   public func rate(rating : Nat, item_name : Text, category : Text) : async (Text, Text) {
     if (rating < 1 or rating > 5) {
       return ("Fail", "Invalid input");
@@ -240,6 +243,9 @@ actor {
     return ("Fail", "Category " # category # " does not exist");
   };
 
+  //Add item to cart
+  //Returns ("Fail", "<error>") if not successful
+  //Returns ("Success", "Nil") if successful
   public func addToCart(user_name : Text, password : Text, item_name : Text, category : Text) : async (Text, Text) {
     for (user in voomUsers.vals()) {
       if (user.username == user_name) {
@@ -273,6 +279,81 @@ actor {
     return ("Fail", "User " # user_name # " does not exist");
   };
 
+  //Add item to wishlist
+  //Returns ("Fail", "<error>") if not successful
+  //Returns ("Success", "Nil") if successful
+  public func addToWishlist(user_name : Text, password : Text, item_name : Text, category : Text) : async (Text, Text) {
+    for (user in voomUsers.vals()) {
+      if (user.username == user_name) {
+        let isAuth = await authenticateUser(user_name, password);
+        if (isAuth == "Fail") {
+          return ("Fail", "Wrong passsword");
+        } else if (isAuth != "Success") {
+          return ("Fail", isAuth);
+        };
+        for (wish_item in user.wishlist.vals()) {
+          if (wish_item.name == item_name) {
+            return ("Fail", "Item already in wishlist");
+          };
+        };
+        for (w in voomItems.vals()) {
+          if (w.catg == category) {
+            for (item in w.catgItems.vals()) {
+              if (item.name == item_name) {
+                let userWishBuff = Buffer.fromArray<Types.ItemDetails>(user.wishlist);
+                userWishBuff.add(await getItemDetails(item));
+                user.wishlist := Buffer.toArray(userWishBuff);
+                return ("Success", "Nil");
+              };
+            };
+            return ("Fail", "Item " # item_name # " with category " # category # " does not exist");
+          };
+        };
+        return ("Fail", "Category " # category # " does not exist");
+      };
+    };
+    return ("Fail", "User " # user_name # " does not exist");
+  };
+
+  //Add item to favorites
+  //Returns ("Fail", "<error>") if not successful
+  //Returns ("Success", "Nil") if successful
+  public func addToFavorites(user_name : Text, password : Text, item_name : Text, category : Text) : async (Text, Text) {
+    for (user in voomUsers.vals()) {
+      if (user.username == user_name) {
+        let isAuth = await authenticateUser(user_name, password);
+        if (isAuth == "Fail") {
+          return ("Fail", "Wrong passsword");
+        } else if (isAuth != "Success") {
+          return ("Fail", isAuth);
+        };
+        for (wish_item in user.wishlist.vals()) {
+          if (wish_item.name == item_name) {
+            return ("Fail", "Item already in favorites");
+          };
+        };
+        for (f in voomItems.vals()) {
+          if (f.catg == category) {
+            for (item in f.catgItems.vals()) {
+              if (item.name == item_name) {
+                let userFavBuff = Buffer.fromArray<Types.ItemDetails>(user.favorites);
+                userFavBuff.add(await getItemDetails(item));
+                user.favorites := Buffer.toArray(userFavBuff);
+                return ("Success", "Nil");
+              };
+            };
+            return ("Fail", "Item " # item_name # " with category " # category # " does not exist");
+          };
+        };
+        return ("Fail", "Category " # category # " does not exist");
+      };
+    };
+    return ("Fail", "User " # user_name # " does not exist");
+  };
+
+  //Remove item from cart
+  //Returns ("Fail", "<error>") if not successful
+  //Returns ("Success", "Nil") if successful
   public func removeFromCart(user_name : Text, password : Text, item_name : Text, category : Text) : async (Text, Text) {
     for (user in voomUsers.vals()) {
       if (user.username == user_name) {
@@ -312,6 +393,93 @@ actor {
     return ("Fail", "User " # user_name # " does not exist");
   };
 
+  //Remove item from wishlist
+  //Returns ("Fail", "<error>") if not successful
+  //Returns ("Success", "Nil") if successful
+  public func removeFromWishlist(user_name : Text, password : Text, item_name : Text, category : Text) : async (Text, Text) {
+    for (user in voomUsers.vals()) {
+      if (user.username == user_name) {
+        let isAuth = await authenticateUser(user_name, password);
+        if (isAuth == "Fail") {
+          return ("Fail", "Wrong Password");
+        } else if (isAuth != "Success") {
+          return ("Fail", isAuth);
+        };
+        for (w in voomItems.vals()) {
+          if (w.catg == category) {
+            for (item in w.catgItems.vals()) {
+              if (item.name == item_name) {
+                let userWishBuff = Buffer.fromArray<Types.ItemDetails>(user.wishlist);
+                let itemNamesBuff = Buffer.map<Types.ItemDetails, Text>(userWishBuff, func (x) {
+                    x.name;
+                });
+                let itemIndexOpt : ?Nat = Buffer.binarySearch<Text>(item_name, itemNamesBuff, Utils.isTextEqual);
+                //itemIndexOpt is never null due to if statement "if item.name == item_name"
+                let itemIndex : Nat = switch (itemIndexOpt) {
+                  case (?itemIndexOpt) { itemIndexOpt };
+                  case (null) {
+                    return ("Fail", "Item not found");
+                    0; };
+                };
+                let removedItem : Types.ItemDetails = userWishBuff.remove(itemIndex);
+                user.wishlist := Buffer.toArray(userWishBuff);
+                return ("Success", "Removed item " # removedItem.name);
+              };
+            };
+            return ("Fail", "Item " # item_name # " with category " # category # " does not exist");
+          };
+        };
+        return ("Fail", "Category " # category # " does not exist");
+      };
+    };
+    return ("Fail", "User " # user_name # " does not exist");
+  };
+
+  //Remove item from favorites
+  //Returns ("Fail", "<error>") if not successful
+  //Returns ("Success", "Nil") if successful
+  public func removeFromFavs(user_name : Text, password : Text, item_name : Text, category : Text) : async (Text, Text) {
+    for (user in voomUsers.vals()) {
+      if (user.username == user_name) {
+        let isAuth = await authenticateUser(user_name, password);
+        if (isAuth == "Fail") {
+          return ("Fail", "Wrong Password");
+        } else if (isAuth != "Success") {
+          return ("Fail", isAuth);
+        };
+        for (f in voomItems.vals()) {
+          if (f.catg == category) {
+            for (item in f.catgItems.vals()) {
+              if (item.name == item_name) {
+                let userFavBuff = Buffer.fromArray<Types.ItemDetails>(user.favorites);
+                let itemNamesBuff = Buffer.map<Types.ItemDetails, Text>(userFavBuff, func (x) {
+                    x.name;
+                });
+                let itemIndexOpt : ?Nat = Buffer.binarySearch<Text>(item_name, itemNamesBuff, Utils.isTextEqual);
+                //itemIndexOpt is never null due to if statement "if item.name == item_name"
+                let itemIndex : Nat = switch (itemIndexOpt) {
+                  case (?itemIndexOpt) { itemIndexOpt };
+                  case (null) {
+                    return ("Fail", "Item not found");
+                    0; };
+                };
+                let removedItem : Types.ItemDetails = userFavBuff.remove(itemIndex);
+                user.favorites := Buffer.toArray(userFavBuff);
+                return ("Success", "Removed item " # removedItem.name);
+              };
+            };
+            return ("Fail", "Item " # item_name # " with category " # category # " does not exist");
+          };
+        };
+        return ("Fail", "Category " # category # " does not exist");
+      };
+    };
+    return ("Fail", "User " # user_name # " does not exist");
+  };
+
+  //Gets user cart
+  //Returns ("Success", "Nil", [<cart items>]) if successfull
+  //Returns ("Fail", "<error>", []) if not successful
   public func getCart (user_name : Text, password : Text) : async (Text, Text, [Types.ItemDetails]) {
     for (user in voomUsers.vals()) {
       if (user.username == user_name) {
@@ -326,6 +494,42 @@ actor {
           userCartBuff.add(await getItemDetails(item));
         };
         return ("Success", "Nil", Buffer.toArray<Types.ItemDetails>(userCartBuff));
+      };
+    };
+    return ("Fail", "User " # user_name # " does not exist", []);
+  };
+
+  //Gets user favorites
+  //Returns ("Success", "Nil", [<favorites>]) if successfull
+  //Returns ("Fail", "<error>", []) if not successful
+  public func getFavorites (user_name : Text, password : Text) : async (Text, Text, [Types.ItemDetails]) {
+    for (user in voomUsers.vals()) {
+      if (user.username == user_name) {
+        let isAuth = await authenticateUser(user_name, password);
+        if ((isAuth) == "Fail") {
+          return ("Fail", "Wrong Password", [])
+        } else if (isAuth != "Success") {
+          return ("Fail", isAuth, []);
+        };
+        return ("Success", "Nil", user.favorites);
+      };
+    };
+    return ("Fail", "User " # user_name # " does not exist", []);
+  };
+
+  //Gets user wishlist
+  //Returns ("Success", "Nil", [<wishlist items>]) if successfull
+  //Returns ("Fail", "<error>", []) if not successful
+  public func getWishlist (user_name : Text, password : Text) : async (Text, Text, [Types.ItemDetails]) {
+    for (user in voomUsers.vals()) {
+      if (user.username == user_name) {
+        let isAuth = await authenticateUser(user_name, password);
+        if ((isAuth) == "Fail") {
+          return ("Fail", "Wrong Password", [])
+        } else if (isAuth != "Success") {
+          return ("Fail", isAuth, []);
+        };
+        return ("Success", "Nil", user.wishlist);
       };
     };
     return ("Fail", "User " # user_name # " does not exist", []);
