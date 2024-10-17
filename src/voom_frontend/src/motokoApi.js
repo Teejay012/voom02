@@ -1,5 +1,5 @@
 import { HttpAgent, Actor } from '@dfinity/agent';
-import { idlFactory as motokoIDL } from '../../declarations/voom_backend/voom_backend.did'; // Adjust the path based on where you store the IDL
+import { idlFactory as motokoIDL } from '../../declarations/voom_backend/voom_backend.did.js'; // Adjust the path based on where you store the IDL
 
 const voomBackendCanisterId = "a4tbr-q4aaa-aaaaa-qaafq-cai";
 

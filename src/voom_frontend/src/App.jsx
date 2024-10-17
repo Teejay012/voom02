@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { voom_backend } from 'declarations/voom_backend';
+// import { voom_backend } from 'declarations/voom_backend';
 import Home from './pages/home/Home';
 import Nav from './componentss/nav/Nav';
 import Register from './pages/register/Register';
