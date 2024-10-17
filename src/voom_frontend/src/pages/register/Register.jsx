@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { userSignUp } from '../../motokoApi';
+// import { userSignUp } from '../../motokoApi';
 import { LiaEye } from "react-icons/lia";
 import { LiaEyeSlash } from "react-icons/lia";
 import google from "../../public/assets/google.png"
@@ -32,19 +32,19 @@ const Register = () => {
 
 
    // Handle form submission and user registration
-   const handleUserRegistration = async () => {
-    const { fullName, username, email, phoneNo, cardDetails, password, confirmPassword } = userData;
+  //  const handleUserRegistration = async () => {
+  //   const { fullName, username, email, phoneNo, cardDetails, password, confirmPassword } = userData;
 
-    // Check if password and confirm password match
-    if (password !== confirmPassword) {
-      setFeedback({ success: false, message: 'Passwords do not match.' });
-      return;
-    }
+  //   // Check if password and confirm password match
+  //   if (password !== confirmPassword) {
+  //     setFeedback({ success: false, message: 'Passwords do not match.' });
+  //     return;
+  //   }
 
-    // Call the userSignUp function from the motokoApi.js
-    const response = await userSignUp(fullName, username, email, phoneNo, cardDetails, password);
-    setFeedback(response);
-  };
+  //   // Call the userSignUp function from the motokoApi.js
+  //   const response = await userSignUp(fullName, username, email, phoneNo, cardDetails, password);
+  //   setFeedback(response);
+  // };
 
 
    // Toggle password visibility
@@ -143,7 +143,7 @@ const Register = () => {
           {/* <button onClick={handleUserRegistration} className="my-5 text-[18px] font-[600] bg-secondary-color h-[52px] w-full rounded-[8px] text-[#fff] transform hover:scale-105 duration-300">Create account</button> */}
         </form>
 
-        <button onClick={handleUserRegistration} className="my-5 text-[18px] font-[600] bg-secondary-color h-[52px] w-full rounded-[8px] text-[#fff] transform hover:scale-105 duration-300">Create account</button>
+        <button className="my-5 text-[18px] font-[600] bg-secondary-color h-[52px] w-full rounded-[8px] text-[#fff] transform hover:scale-105 duration-300">Create account</button>
 
         <span className="flex items-center justify-center gap-2">
           <p className="text-[12px] font-[600]">Already have an Account?</p>
