@@ -1,16 +1,35 @@
 import { HttpAgent, Actor } from '@dfinity/agent';
-import { idlFactory as motokoIDL } from '././../../declarations/voom_backend'; // Adjust the path based on where you store the IDL
+import { idlFactory as motokoIDL } from '../../declarations/voom_backend/voom_backend.did'; // Adjust the path based on where you store the IDL
 
-const canisterId = "your-canister-id"; // Replace with your actual canister ID
+const voomBackendCanisterId = "a4tbr-q4aaa-aaaaa-qaafq-cai";
 
-const agent = new HttpAgent({
-  host: 'https://ic0.app', // ICP's mainnet URL
-});
+const agent = new HttpAgent();
 
 const motokoActor = Actor.createActor(motokoIDL, {
   agent,
-  canisterId,
+  canisterId: voomBackendCanisterId,
 });
+
+
+// /////////////// USER SIGNUP \\\\\\\\\\\\\\\\\\\\\\\\\
+
+export const userSignUp = async (fullName, username, email, phoneNo, cardDetails, password) => {
+    try {
+      // Assuming motokoActor is already configured to talk to your backend canister
+      const [status, message] = await motokoActor.userSignUp(fullName, username, email, phoneNo, cardDetails, password);
+  
+      if (status === "Success") {
+        return { success: true, message: "User registered successfully" };
+      } else {
+        return { success: false, message };
+      }
+    } catch (error) {
+      console.error("User registration failed:", error);
+      return { success: false, message: "Registration failed due to an error" };
+    }
+  };
+
+
 
 export const addVendor = async (brand, email, phoneNo, cardDetails) => {
     try {

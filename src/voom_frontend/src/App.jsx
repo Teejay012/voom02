@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import { voom_backend } from 'declarations/voom_backend';
+import { voom_backend } from 'declarations/voom_backend';
 import Home from './pages/home/Home';
 import Nav from './componentss/nav/Nav';
 import Register from './pages/register/Register';
@@ -11,8 +11,6 @@ import NotificationPage from './pages/notifications/Notifications';
 import Orders from './pages/orders/Orders';
 import ProductPage from './pages/product-page/ProductPage';
 import Profile from './pages/profile/Profile';
-import TrackOrder from './pages/track-order/TrackOrder';
-import Search from './containers/search/Search';
 import Track from './pages/track/Track';
 
 const App = () => {

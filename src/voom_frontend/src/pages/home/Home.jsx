@@ -1,3 +1,4 @@
+import React from 'react';
 import Header from "../../componentss/header/Header";
 import Search from "../../containers/search/Search";
 import Categories from "../../containers/categories/Categories";
