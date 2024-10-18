@@ -5,6 +5,7 @@ import Categories from "../../containers/categories/Categories";
 import NewArrival from "../../containers/newArrival/NewArrival";
 import Recommended from "../../containers/recommended/Recommended";
 import LocalServices from "../../containers/localServicees/LocalServices";
+import Ads from '../../componentss/ads/Ads';
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
         <Header />
         <Search />
         <Categories />
+        <Ads />
         <NewArrival />
         <Recommended />
         <LocalServices />

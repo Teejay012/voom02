@@ -16,7 +16,7 @@ import Track from './pages/track/Track';
 const App = () => {
   return (
     <Router>
-        <div className="max-w-[390px] border-2 border-red-500 h-full px-3 pt-3 relative mx-auto relative">
+        <div className="max-w-[390px] h-full px-3 pt-3 relative relative">
 
             <Routes>
                 <Route path="/" element={<Home />} />
