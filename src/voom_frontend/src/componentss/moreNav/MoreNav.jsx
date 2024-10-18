@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { IoNotifications } from "react-icons/io5";
 import { BiSolidStore } from "react-icons/bi";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
+import { FaUser } from "react-icons/fa";
 
 const MoreNav = () => {
   return (
@@ -16,7 +17,7 @@ const MoreNav = () => {
             </li>
 
             <li>
-                <Link href="#" className="flex flex-col items-center justify-center gap-2">
+                <Link to="./stores" className="flex flex-col items-center justify-center gap-2">
                     <BiSolidStore className="text-[25px] font-bold"/>
                     <p className="text-[12px] text-[#8891A5] font[500]">Stores</p>
                 </Link>
@@ -26,6 +27,13 @@ const MoreNav = () => {
                 <Link href="#" className="flex flex-col items-center justify-center gap-2">
                     <IoChatbubbleEllipsesSharp className="text-[25px] font-bold"/>
                     <p className="text-[12px] text-[#8891A5] font[500]">Inbox</p>
+                </Link>
+            </li>
+
+            <li>
+                <Link to="./profile" className="flex flex-col items-center justify-center gap-2">
+                    <FaUser className="text-[25px] font-bold"/>
+                    <p className="text-[12px] text-[#8891A5] font[500]">Profile</p>
                 </Link>
             </li>
         </ul>

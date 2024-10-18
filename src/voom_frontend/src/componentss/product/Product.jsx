@@ -3,7 +3,7 @@ import { BsBalloonHeart } from "react-icons/bs";
 
 const Product = ({ image, name, price}) => {
   return (
-    <Link to="./product-page">
+    <Link to="../product-page">
         <div className="rounded-[15px] overflow-hidden w-[160px] h-[171px] relative mb-3">
             <img
                 src={image}

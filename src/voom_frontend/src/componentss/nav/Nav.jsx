@@ -15,7 +15,7 @@ const Nav = () => {
     };
 
   return (
-    <div className="fixed bottom-0 left-0 z-50 max-w-[390px] h-[70px] p-3 w-full bg-[#fff] rounded-[15px]">
+    <div className="fixed left-0 bottom-0 z-50 h-[70px] p-3 w-full bg-[#fff] rounded-[15px]">
         <ul className="flex justify-between items-center w-full h-full">
             <li>
                 <Link to="./" className="flex flex-col items-center justify-center gap-2 text-secondary-color">
@@ -32,7 +32,7 @@ const Nav = () => {
             </li>
 
             <li>
-                <Link to="./categories" className="flex flex-col items-center justify-center gap-2">
+                <Link to="./services" className="flex flex-col items-center justify-center gap-2">
                     <MdHomeRepairService className="text-[25px] font-bold"/>
                     <p className="text-[12px] text-[#8891A5] font[500]">Services</p>
                 </Link>
