@@ -18,7 +18,7 @@ import Stores from './pages/stores/Stores';
 const App = () => {
   return (
     <Router>
-        <div className="max-w-[390px] h-full border-2 border-red-500 px-3 pt-3 relative mx-auto relative">
+        <div className="max-w-[390px] h-full px-3 pt-3 relative mx-auto relative">
 
             <Routes>
                 <Route path="/" element={<Home />} />
